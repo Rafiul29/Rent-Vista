@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class RentAdvertisementConfig(AppConfig):
+class AccountConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'rent_advertisement'
+    name = 'account'

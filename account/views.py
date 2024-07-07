@@ -1,19 +1,14 @@
 from django.shortcuts import render,redirect
-from .models import User
-from .serializers import UserSerializer,UserLoginSerializer
-from django.contrib.auth import authenticate, login
-from rest_framework import status
-from rest_framework.response import Response
+from rest_framework import viewsets
 from rest_framework.views import APIView
-from rest_framework.authtoken.views import ObtainAuthToken
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated
 
+from .serializers import UserSerializer,UserLoginSerializer
+from rest_framework.response import Response
+from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth import authenticate,login,logout
-
 #for sending email
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -58,6 +53,7 @@ def activate(request,uid64,token):
     return redirect('register')
   
 
+
 class UserLoginView(APIView):
   def post(self, request):
     serializer = UserLoginSerializer(data = self.request.data)
@@ -75,3 +71,11 @@ class UserLoginView(APIView):
         return Response({'error' : "Invalid Credential"})
     return Response(serializer.errors)
   
+
+
+class UserLogoutView(APIView):
+  def get(self, request):
+    print(request.user)
+    request.user.auth_token.delete()
+    logout(request)
+    return redirect('login')

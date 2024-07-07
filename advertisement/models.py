@@ -35,7 +35,7 @@ class Favourite(models.Model):
 
   def __str__(self) -> str:
     print(self.user)
-    return self.user
+    return self.user.first_name
   
 STAR_CHOICES=[
   ('⭐','⭐'),

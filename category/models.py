@@ -7,7 +7,7 @@ class Category(models.Model):
   slug=models.SlugField(max_length=100)
 
   def __str__(self) -> str:
-    return self.name
+    return f"{self.name}"
   
   class Meta:
     verbose_name_plural = "categories"

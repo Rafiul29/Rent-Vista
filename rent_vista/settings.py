@@ -32,7 +32,8 @@ SECRET_KEY = 'django-insecure-njy&=5!c4=gb-syk0%w+t8_%-dv*d%7yu*ddbt06oq6kfcov)0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ['https://rent-vista.onrender.com','http://127.0.0.1:8000']
 
 
 # Application definition

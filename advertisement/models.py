@@ -45,7 +45,6 @@ STAR_CHOICES=[
   ('⭐⭐⭐⭐⭐','⭐⭐⭐⭐⭐'),
 ]
 
-
 class Review(models.Model):
   advertisement=models.ForeignKey(RentAdvertisement,related_name='reviews',on_delete=models.CASCADE)
   reviewer=models.ForeignKey(User,related_name="reviews",on_delete=models.CASCADE)

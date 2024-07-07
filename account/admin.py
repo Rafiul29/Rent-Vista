@@ -1,6 +1,10 @@
+from typing import Any
 from django.contrib import admin
 from .models import User
 # Register your models here.
 
+class UserAdmin(admin.ModelAdmin):
+  list_display=['first_name','last_name','username','email','role']
+    
 
-admin.site.register(User)
+admin.site.register(User,UserAdmin)

@@ -10,6 +10,7 @@ class RentAdvertisement(models.Model):
   category=models.ForeignKey(Category,related_name='advertisements',on_delete=models.CASCADE)
   owner=models.ForeignKey(User,related_name='advertisements',on_delete=models.CASCADE)
   is_approved=models.BooleanField(default=False)
+  request_accepted = models.BooleanField(default=False)
   created_at=models.DateTimeField(auto_now_add=True)
   image=models.ImageField(upload_to='advertisement/images/')
 

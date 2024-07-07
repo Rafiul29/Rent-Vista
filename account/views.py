@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect
 from .models import User
-from .serializers import UserSerializer
+from .serializers import UserSerializer,UserLoginSerializer
 from django.contrib.auth import authenticate, login
 from rest_framework import status
 from rest_framework.response import Response
@@ -58,3 +58,20 @@ def activate(request,uid64,token):
     return redirect('register')
   
 
+class UserLoginView(APIView):
+  def post(self, request):
+    serializer = UserLoginSerializer(data = self.request.data)
+    if serializer.is_valid():
+      username = serializer.validated_data['username']
+      password = serializer.validated_data['password']
+
+      user = authenticate(username= username, password=password)
+            
+      if user:
+         token, _ = Token.objects.get_or_create(user=user)
+         login(request,user)
+         return Response({'token' : token.key, 'user_id' : user.id})
+      else:
+        return Response({'error' : "Invalid Credential"})
+    return Response(serializer.errors)
+  

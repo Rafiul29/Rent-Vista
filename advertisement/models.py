@@ -20,7 +20,7 @@ class RentAdvertisement(models.Model):
 class RentRequest(models.Model):
   advertisement=models.ForeignKey(RentAdvertisement,related_name='rent_requests', on_delete=models.CASCADE)
   requester=models.ForeignKey(User,related_name='rent_requests', on_delete=models.CASCADE)
-  accepted = models.BooleanField(default=False)
+  is_accepted = models.BooleanField(default=False)
   created_at=models.DateTimeField(auto_now_add=True)
   
   def __str__(self) -> str:

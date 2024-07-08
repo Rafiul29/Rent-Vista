@@ -20,9 +20,9 @@ class RentAdvertisementOwner(filters.BaseFilterBackend):
 class RentAdvertisementViewSet(viewsets.ModelViewSet):
   queryset=RentAdvertisement.objects.all()
   serializer_class=RentAdvertisementSerializer
-  filter_backends=[filters.SearchFilter]
-  filter_backends=[RentAdvertisementOwner]
+  filter_backends=[filters.SearchFilter,RentAdvertisementOwner]
   search_fields = ['category__name']
+
   def get_queryset(self):
     queryset = super().get_queryset()
     user = self.request.user
@@ -51,8 +51,6 @@ class RentRequestViewSet(viewsets.ModelViewSet):
         return queryset
       else:
         return queryset.filter(is_accepted=True)
-
-
 
 class FavouriteSpecificAdvertisement(filters.BaseFilterBackend):
    def filter_queryset(self,request,query_set,view):

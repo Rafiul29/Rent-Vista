@@ -36,6 +36,7 @@ ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ['https://rent-vista.onrender.com','http://127.0.0.1:8000']
 
 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'corsheaders',
     'account',
     'advertisement',
     'category',
@@ -54,6 +55,14 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
 
 ]
+
+CORS_ORIGIN_WHITELIST = (
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+)
+
+CORS_ALLOW_ALL_ORIGINS=True
 
 AUTH_USER_MODEL = 'account.User'
 
@@ -67,6 +76,7 @@ REST_FRAMEWORK = {
 
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

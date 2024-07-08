@@ -3,6 +3,8 @@ from category.models import Category
 from account.models import User
 # Create your models here.
 
+
+
 class RentAdvertisement(models.Model):
   title=models.CharField(max_length=100)
   description=models.TextField()

@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import RentAdvertisement,RentRequest,Favourite,Review
 
 class RentAdvertisementSerializer(serializers.ModelSerializer):
+  category=serializers.StringRelatedField(many=False)
   class Meta:
     model=RentAdvertisement
     fields='__all__'

@@ -1,10 +1,11 @@
 from django.shortcuts import render,redirect
 from rest_framework import viewsets
 from rest_framework.views import APIView
-
+from account.models import User
 from .serializers import UserSerializer,UserLoginSerializer
 from rest_framework.response import Response
 from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes
@@ -28,6 +29,7 @@ class UserRegistrationView(APIView):
             uid=urlsafe_base64_encode(force_bytes(user.pk))
             print('uid ',uid)
             confirm_link=f'http://127.0.0.1:8000/api/auth/active/{uid}/{token}'
+            # confirm_link=f'https://rent-vista.onrender.com/api/auth/active/{uid}/{token}'
             email_subject='Confirm Your Email'
             email_body=render_to_string('confirm_email.html',{'confirm_link':confirm_link})
             email = EmailMultiAlternatives(email_subject , '', to=[user.email])
@@ -37,20 +39,21 @@ class UserRegistrationView(APIView):
         return Response(serializer.errors)
 
 
-def activate(request,uid64,token):
-  try:
-    uid=urlsafe_base64_decode(uid64).decode()
-    user=User._default_manager.get(pk=uid)
-  
-  except(User.DoesNotExist):
-    user=None
-
-  if user is not None and default_token_generator.check_token(user,token):
-    user.is_active=True
-    user.save()
-    return redirect('login')
-  else:
-    return redirect('register')
+def activate(request, uid64, token):
+    try: 
+        uid = urlsafe_base64_decode(uid64).decode() 
+        print(uid)
+        user=get_user_model().objects.get(pk=uid) #
+        print(user)
+    except get_user_model().DoesNotExist:
+        user = None 
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        return redirect('login')
+    else:
+        return redirect('register')
   
 
 

@@ -1,4 +1,5 @@
 from django.shortcuts import render,redirect
+from django.conf import settings
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from account.models import User
@@ -10,6 +11,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode,urlsafe_base64_decode
 from django.utils.encoding import force_bytes
 from django.contrib.auth import authenticate,login,logout
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 #for sending email
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -38,25 +41,20 @@ class UserRegistrationView(APIView):
             return Response("Check your mail confirmation")
         return Response(serializer.errors)
 
-
 def activate(request, uid64, token):
     try: 
         uid = urlsafe_base64_decode(uid64).decode() 
-        print(uid)
-        user=get_user_model().objects.get(pk=uid) #
-        print(user)
+        user=get_user_model().objects.get(pk=uid) 
     except get_user_model().DoesNotExist:
         user = None 
     
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('login')
+        return redirect(settings.LOGIN_URL)
     else:
         return redirect('register')
   
-
-
 class UserLoginView(APIView):
   def post(self, request):
     serializer = UserLoginSerializer(data = self.request.data)
@@ -71,14 +69,17 @@ class UserLoginView(APIView):
          login(request,user)
          return Response({'token' : token.key, 'user_id' : user.id})
       else:
-        return Response({'error' : "Invalid Credential"})
+        return Response({'error' : "username and password incorrect"})
     return Response(serializer.errors)
   
 
 
 class UserLogoutView(APIView):
+  authentication_classes = [TokenAuthentication]
+  permission_classes = [IsAuthenticated]
   def get(self, request):
-    print(request.user)
+    print("user",request.user)
     request.user.auth_token.delete()
     logout(request)
-    return redirect('login')
+    return redirect(settings.LOGIN_URL)
+  

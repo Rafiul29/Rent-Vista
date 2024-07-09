@@ -33,9 +33,10 @@ SECRET_KEY = 'django-insecure-njy&=5!c4=gb-syk0%w+t8_%-dv*d%7yu*ddbt06oq6kfcov)0
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
+
 CSRF_TRUSTED_ORIGINS = ['https://rent-vista.onrender.com','http://127.0.0.1:8000']
 
-
+LOGIN_URL="http://127.0.0.1:5500/login.html"
 
 # Application definition
 
@@ -66,11 +67,14 @@ CORS_ALLOW_ALL_ORIGINS=True
 
 AUTH_USER_MODEL = 'account.User'
 
+APPEND_SLASH=False
 
 REST_FRAMEWORK = {
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework.authentication.TokenAuthentication',
-    # ],
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+    
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 

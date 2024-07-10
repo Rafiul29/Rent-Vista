@@ -9,12 +9,14 @@ class RentAdvertisementSerializer(serializers.ModelSerializer):
 
 
 class RentRequestSerializer(serializers.ModelSerializer):
+  
   class Meta:
     model=RentRequest
     fields='__all__'
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
+  # advertisement=serializers.StringRelatedField(many=False)
   class Meta:
     model=Favourite
     fields='__all__'

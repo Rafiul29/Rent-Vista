@@ -11,6 +11,9 @@ class RentAdvertisement(models.Model):
   price=models.DecimalField(max_digits=10,decimal_places=2)
   category=models.ForeignKey(Category,related_name='advertisements',on_delete=models.CASCADE)
   owner=models.ForeignKey(User,related_name='advertisements',on_delete=models.CASCADE)
+  location=models.CharField(max_length=100,null=True)
+  bedrooms=models.IntegerField(null=True)
+  amenities=models.CharField(max_length=100,null=True)
   is_approved=models.BooleanField(default=False)
   request_accepted = models.BooleanField(default=False)
   created_at=models.DateTimeField(auto_now_add=True)
@@ -19,7 +22,6 @@ class RentAdvertisement(models.Model):
   def __str__(self) -> str:
     return self.title
   
-
 class RentRequest(models.Model):
   advertisement=models.ForeignKey(RentAdvertisement,related_name='rent_requests', on_delete=models.CASCADE)
   requester=models.ForeignKey(User,related_name='rent_requests', on_delete=models.CASCADE)
@@ -36,7 +38,6 @@ class Favourite(models.Model):
   created_at=models.DateTimeField(auto_now_add=True)
 
   def __str__(self) -> str:
-    print(self.user)
     return self.user.first_name
   
 STAR_CHOICES=[

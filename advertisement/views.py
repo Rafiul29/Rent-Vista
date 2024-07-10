@@ -5,7 +5,8 @@ from .serializers import RentAdvertisementSerializer,RentRequestSerializer,Favou
 
 
 from rest_framework.permissions import IsAuthenticated
-
+from .permissions import IsOwnerOfAdvertisement
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -34,23 +35,45 @@ class RentAdvertisementViewSet(viewsets.ModelViewSet):
 class RentRequestSpecificAdvertisement(filters.BaseFilterBackend):
    def filter_queryset(self,request,query_set,view):
     requester_id=request.query_params.get('requester_id')
+    owner_id = request.query_params.get('owner_id')
     if requester_id:
       return query_set.filter(requester=requester_id)
+    elif owner_id:
+      return query_set.filter(advertisement__owner_id=owner_id)
     return query_set
-         
-
+   
 class RentRequestViewSet(viewsets.ModelViewSet):
-  permission_classes=[IsAuthenticated]
+   
   queryset=RentRequest.objects.all()
   serializer_class=RentRequestSerializer
   filter_backends=[RentRequestSpecificAdvertisement]
-  def get_queryset(self):
-      queryset = super().get_queryset()
-      user = self.request.user
-      if user.is_staff:
-        return queryset
-      else:
-        return queryset.filter(is_accepted=True)
+  permission_classes = [IsAuthenticated, IsOwnerOfAdvertisement] 
+
+  def get_permissions(self):
+        if self.action in ['update', 'partial_update']:
+            return [IsAuthenticated(), IsOwnerOfAdvertisement()]
+        return [IsAuthenticated()]
+
+  def perform_update(self, serializer):
+    rent_request = self.get_object()
+    advertisement = rent_request.advertisement
+
+    if self.request.user != advertisement.owner:
+        raise PermissionDenied("You do not have permission to perform this action.")
+
+    is_accepted = serializer.validated_data.get('is_accepted', rent_request.is_accepted)
+    rent_request.is_accepted = is_accepted
+
+    if advertisement.request_accepted:
+        rent_request.is_accepted = False
+        advertisement.request_accepted = False
+    else:
+        rent_request.is_accepted = True
+        advertisement.request_accepted = True
+
+    rent_request.save()
+    advertisement.save()
+
 
 class FavouriteSpecificAdvertisement(filters.BaseFilterBackend):
    def filter_queryset(self,request,query_set,view):

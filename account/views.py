@@ -83,8 +83,3 @@ class UserLogoutView(APIView):
     logout(request)
     return redirect(settings.LOGIN_URL)
   
-
-# class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserProfileSerializer
-#     lookup_field = 'username'  # Define the lookup field for retrieving by username

@@ -16,12 +16,13 @@ class RentRequestSerializer(serializers.ModelSerializer):
 
 
 class FavouriteSerializer(serializers.ModelSerializer):
-  # advertisement=serializers.StringRelatedField(many=False)
+
   class Meta:
     model=Favourite
     fields='__all__'
 
 class ReviewSerializer(serializers.ModelSerializer):
+  
   class Meta:
     model=Review
     fields='__all__'

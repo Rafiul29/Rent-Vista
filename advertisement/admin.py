@@ -4,11 +4,14 @@ from rest_framework.response import Response
 # Register your models here.
 
 class RentAdvertisementAdmin(admin.ModelAdmin):
-   list_display=['title','category','is_approved','bedrooms']
+   list_display=['title','category','is_approved','request_accepted','bedrooms']
    def save_model(self, request,obj,form,chnage) -> None:
     
     obj.save()
-    obj.is_approved=True
+    if obj.is_approved==True:
+      obj.is_approved=True
+    else:
+      obj.is_approved=True
     obj.save()
 
 admin.site.register(RentAdvertisement,RentAdvertisementAdmin)
